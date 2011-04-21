@@ -53,6 +53,12 @@ module Mongoid #:nodoc:
         else
           if key == "$or"
             Matchers::Or.new(value, document)
+          elsif key.to_s.include?(".")
+            attributes = document.attributes
+            key.to_s.split(".").each do |attribute|
+              attributes = attributes[attribute]
+            end
+            Default.new(attributes)
           else
             Default.new(document.attributes[key])
           end
